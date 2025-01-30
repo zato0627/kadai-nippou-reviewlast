@@ -107,7 +107,7 @@ public class EmployeeController {
 
     		model.addAttribute("employee", employeeService.getEmployee(code));
 
-    		return "employees/{code}/update";
+    		return "employees/update";
     	}else {
 
     		model.addAttribute("employee", employee);
@@ -122,7 +122,6 @@ public class EmployeeController {
     		String code = null;
     		return getUpdate(code, employee, model);
     	}
-
     	employeeService.save(employee);
 
     	return "redirect:/employees";

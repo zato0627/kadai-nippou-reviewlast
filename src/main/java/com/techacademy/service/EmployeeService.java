@@ -50,7 +50,13 @@ public class EmployeeService {
         return ErrorKinds.SUCCESS;
     }
 
+    //従業員情報　更新
+    @Transactional
     public Employee getEmployee(String code) {
+    	Employee employee = findByCode(code);	//codeをもとに従業員の情報を取得
+    	LocalDateTime now = LocalDateTime.now();// 現在の日時を取得
+    	employee.setUpdatedAt(now);				//　設定
+
     	return employeeRepository.findById(code).get();
     }
 
