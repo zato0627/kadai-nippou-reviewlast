@@ -104,7 +104,7 @@ public class EmployeeController {
     @GetMapping(value = "/{code}/update/")
     public String getUpdate(@PathVariable("code") String code, Employee employee, Model model) {
     	if(code != null) {
-    		model.addAttribute(employeeService.getEmployee(code));
+    		model.addAttribute("employee", employeeService.getEmployee(code));	//urlのcode(社員番号)から社員のデータを取得
     		return "employees/update";
     	}else {
     		model.addAttribute("employee", employee);
