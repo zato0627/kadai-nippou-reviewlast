@@ -40,11 +40,11 @@ public class EmployeeService {
             return ErrorKinds.DUPLICATE_ERROR;
         }
 
-        employee.setDeleteFlg(false);
+        employee.setDeleteFlg(false);	//deleteflgをfalseに設定
 
-        LocalDateTime now = LocalDateTime.now();
-        employee.setCreatedAt(now);
-        employee.setUpdatedAt(now);
+        LocalDateTime now = LocalDateTime.now();	// 現在の時刻を取得
+        employee.setCreatedAt(now);					//	データを作成した日時に現在の日時を設定
+        employee.setUpdatedAt(now);					// データの更新日時に現在の日時を設定
 
         employeeRepository.save(employee);
         return ErrorKinds.SUCCESS;
@@ -53,11 +53,19 @@ public class EmployeeService {
     //従業員情報　更新
     @Transactional
     public Employee getEmployee(String code) {
-    	Employee employee = findByCode(code);	//codeをもとに従業員の情報を取得
-    	LocalDateTime now = LocalDateTime.now();// 現在の日時を取得
-    	employee.setUpdatedAt(now);				//　設定
-
     	return employeeRepository.findById(code).get();
+    }
+
+    @Transactional
+    public ErrorKinds upDate(Employee employee) {
+
+
+    	LocalDateTime now = LocalDateTime.now();// 現在の日時を取得
+    	employee.setUpdatedAt(now);				//　せってい
+
+    	employeeRepository.save(employee);
+
+    	return ErrorKinds.SUCCESS;
     }
 
     // 従業員削除

@@ -101,28 +101,26 @@ public class EmployeeController {
     //従業員更新機能
 
     /**更新画面を表示 */
-    @GetMapping(value = "/{code}/update")
+    @GetMapping(value = "/{code}/update/")
     public String getUpdate(@PathVariable("code") String code, Employee employee, Model model) {
     	if(code != null) {
-
-    		model.addAttribute("employee", employeeService.getEmployee(code));
-
+    		model.addAttribute(employeeService.getEmployee(code));
     		return "employees/update";
     	}else {
-
     		model.addAttribute("employee", employee);
 
     		return "employees/update";
     	}
+
     }
 
-    @PostMapping(value = "/{code}/update")
+    @PostMapping(value = "/{code}/update/")
     public String postUpdate(@Validated Employee employee, BindingResult res, Model model) {
     	if(res.hasErrors()) {
     		String code = null;
     		return getUpdate(code, employee, model);
     	}
-    	employeeService.save(employee);
+    	employeeService.upDate(employee);
 
     	return "redirect:/employees";
     }
