@@ -55,6 +55,7 @@
                                             <select class="form-select" th:field="*{role}" id="role">
                                                 <option th:each="item:${T(com.techacademy.entity.Employee.Role).values()}" th:value="${item}" th:text="${item.getValue()}" th:selected="*{role} == ${item}">
                                             </select>
+                                            <label class="align-middle" th:text="${#temporals.format(employee.createdAt, 'yyyy-MM-dd hh:mm:ss')}" style="display:none"></label>
                                         </div>
                                     </div>
                                 </div>

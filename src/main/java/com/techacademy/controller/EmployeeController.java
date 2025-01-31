@@ -46,6 +46,7 @@ public class EmployeeController {
     public String detail(@PathVariable("code") String code, Model model) {
 
         model.addAttribute("employee", employeeService.findByCode(code));
+
         return "employees/detail";
     }
 
@@ -103,26 +104,31 @@ public class EmployeeController {
     /**更新画面を表示 */
     @GetMapping(value = "/{code}/update/")
     public String getUpdate(@PathVariable("code") String code, Employee employee, Model model) {
-    	if(code != null) {
-    		model.addAttribute("employee", employeeService.getEmployee(code));	//urlのcode(社員番号)から社員のデータを取得
-    		return "employees/update";
-    	}else {
-    		model.addAttribute("employee", employee);
+
+    	//if(code != null) {
+    		model.addAttribute("employee", employeeService.findByCode(code));	//urlのcode(社員番号)から社員のデータを取得
 
     		return "employees/update";
-    	}
+    	//}else {
+    		//model.addAttribute("employee", employee);
 
+    		//return "employees/update";
+    	//}
     }
     /** 更新処理　*/
     @PostMapping(value = "/{code}/update/")
     public String postUpdate(@Validated Employee employee, @PathVariable("code") String code, BindingResult res, Model model) {
+
+
+        System.out.println("Employee: " + employee);    	// デバッグログ　後で消す
+
     	if(res.hasErrors()) {
     		//String code = null;
     		return getUpdate(code, employee, model);
     	}
 
     	if("".equals(employee.getPassword())) {
-
+    			//パスワードが空でも更新ができるようにする
 
     	}
     	try {

@@ -51,10 +51,10 @@ public class EmployeeService {
     }
 
     //従業員情報　更新
-    @Transactional
+   /* @Transactional
     public Employee getEmployee(String code) {
     	return employeeRepository.findById(code).get();	//社員番号をもとにデータを取得
-    }
+    }*/
 
     @Transactional
     public ErrorKinds upDate(Employee employee) {
@@ -66,6 +66,7 @@ public class EmployeeService {
 
     	LocalDateTime now = LocalDateTime.now();// 現在の日時を取得
     	employee.setUpdatedAt(now);				//　せってい
+    	employee.setCreatedAt(now);				//現在の日時を登録しているが、登録日を参照できるようにする
 
     	employeeRepository.save(employee);
 
