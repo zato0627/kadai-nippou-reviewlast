@@ -113,16 +113,38 @@ public class EmployeeController {
     	}
 
     }
-
+    /** 更新処理　*/
     @PostMapping(value = "/{code}/update/")
-    public String postUpdate(@Validated Employee employee, BindingResult res, Model model) {
+    public String postUpdate(@Validated Employee employee, @PathVariable("code") String code, BindingResult res, Model model) {
     	if(res.hasErrors()) {
-    		String code = null;
+    		//String code = null;
     		return getUpdate(code, employee, model);
     	}
-    	employeeService.upDate(employee);
 
-    	return "redirect:/employees";
+    	if("".equals(employee.getPassword())) {
+
+
+    	}
+    	try {
+            ErrorKinds result = employeeService.upDate(employee);
+
+            if (ErrorMessage.contains(result)) {
+
+                model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
+                return getUpdate(code, employee, model);
+            }
+
+        } catch (DataIntegrityViolationException e) {
+
+            model.addAttribute(ErrorMessage.getErrorName(ErrorKinds.DUPLICATE_EXCEPTION_ERROR),
+                    ErrorMessage.getErrorValue(ErrorKinds.DUPLICATE_EXCEPTION_ERROR));
+            return getUpdate(code, employee, model);
+        }
+
+        return "redirect:/employees";
+    //	employeeService.upDate(employee);
+
+    //	return "redirect:/employees";
     }
 
     // 従業員削除処理

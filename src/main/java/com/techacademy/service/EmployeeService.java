@@ -59,6 +59,10 @@ public class EmployeeService {
     @Transactional
     public ErrorKinds upDate(Employee employee) {
 
+    	ErrorKinds result = employeePasswordCheck(employee);
+    	if(ErrorKinds.CHECK_OK != result) {
+    		return result;
+    	}
 
     	LocalDateTime now = LocalDateTime.now();// 現在の日時を取得
     	employee.setUpdatedAt(now);				//　せってい
