@@ -50,12 +50,6 @@ public class EmployeeService {
         return ErrorKinds.SUCCESS;
     }
 
-    //従業員情報　更新
-   /* @Transactional
-    public Employee getEmployee(String code) {
-    	return employeeRepository.findById(code).get();	//社員番号をもとにデータを取得
-    }*/
-
     @Transactional
     public ErrorKinds upDate(Employee employee) {
 
