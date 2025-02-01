@@ -105,21 +105,22 @@ public class EmployeeController {
     @GetMapping(value = "/{code}/update/")
     public String getUpdate(@PathVariable("code") String code, Model model) {
 
-    	Employee employee = employeeService.findByCode(code);//urlのcode(社員番号)から社員のデータを取得
-    	model.addAttribute("employee", employee);
+    	Employee employee = employeeService.findByCode(code);	//urlのcode(社員番号)から社員のデータを取得
+    	model.addAttribute("employee", employee);				//modelにデータを登録
 
-    	return "employees/update";
+    	return "employees/update";	//updateに画面遷移
 
     }
     /** 更新処理　*/
     @PostMapping(value = "/{code}/update/")
-    public String postUpdate(@Validated Employee employee, @PathVariable("code") String code, BindingResult res, Model model) {
+    public String postUpdate(@Validated Employee employee, BindingResult res, @PathVariable("code") String code, Model model) {
     	// 入力チェック
     	if(res.hasErrors()) {
-					return getUpdate(code, model);
-    			}
+    		model.addAttribute("employee", employee);
+			return getUpdate(code, model);
+    	}
 
-
+    	// 従業員新規登録処理のものを再利用
     	try {
 
 			ErrorKinds result = employeeService.upDate(employee);	//employeeを更新し、resultに格納
@@ -127,6 +128,7 @@ public class EmployeeController {
 			if (ErrorMessage.contains(result)) {	//エラーメッセージにresultが含まれているか確認
 
 				model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));	//含まれていたらmodelにエラーメッセージの名前、値を追加
+				model.addAttribute("employee", employee);
 				return getUpdate(code, model);	//getUpdateに結果を返す
 			}
 
@@ -134,9 +136,10 @@ public class EmployeeController {
 
 			model.addAttribute(ErrorMessage.getErrorName(ErrorKinds.DUPLICATE_EXCEPTION_ERROR),
         	ErrorMessage.getErrorValue(ErrorKinds.DUPLICATE_EXCEPTION_ERROR));
+			model.addAttribute("employee", employee);
 			return getUpdate(code, model);
 		}
-        return "redirect:/employees";
+        return "redirect:/employees";	//一覧画面にリダイレクト
 
     }
 

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html><!-- 従業員新規登録画面を再利用　-->
 <html class="h-100" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
 <head th:replace="~{common/header :: head_fragment(title=従業員更新)}"></head>
@@ -58,7 +58,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <input type="hidden" th:field="*{createdAt}">
+                                <input type="hidden" th:field="*{createdAt}"><!-- 登録情報を非表示で取得　-->
                                 <p class="mt-5">
                                     <input type="submit" value="更新" class="btn btn-primary">
                                     <a th:href="@{/employees}" class="btn btn-primary">戻る</a>

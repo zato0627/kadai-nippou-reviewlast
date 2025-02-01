@@ -46,7 +46,7 @@
                                 </table>
                                 <div class="mt-5 row g-1">
                                 	<div class="col-auto">
-                                        <form name="form" th:action="@{/employees/{code}/update/(code=${employee.code})}" th:method="get">
+                                        <form name="form" th:action="@{/employees/{code}/update/(code=${employee.code})}" th:method="get"><!-- 更新ボタンを作成　methodをpostからgetに変更　-->
                                             <input type="submit" value="更新" class="btn btn-primary">
                                         </form>
                                     </div>

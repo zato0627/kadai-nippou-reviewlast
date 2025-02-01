@@ -52,6 +52,8 @@ public class EmployeeService {
 
     @Transactional
     public ErrorKinds upDate(Employee employee) {
+
+    	//更新画面のパスワード入力欄が空白じゃない時だけパスワードをチェックするように変更
     	if(!"".equals(employee.getPassword())){
     		// パスワードチェック
     		ErrorKinds result = employeePasswordCheck(employee);
@@ -62,7 +64,7 @@ public class EmployeeService {
 
     	LocalDateTime now = LocalDateTime.now();// 現在の日時を取得
     	employee.setUpdatedAt(now);				//　せってい
-    	LocalDateTime saveTime = employee.getCreatedAt();
+    	LocalDateTime saveTime = employee.getCreatedAt(); //登録日を取得しsetCreatedAtに再登録
     	employee.setCreatedAt(saveTime);
 
     	employeeRepository.save(employee);
