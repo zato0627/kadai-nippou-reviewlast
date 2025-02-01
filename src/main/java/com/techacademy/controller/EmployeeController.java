@@ -127,10 +127,16 @@ public class EmployeeController {
     		return getUpdate(code, employee, model);
     	}
 
-    	if("".equals(employee.getPassword())) {
+    	try {
+    		if("".equals(employee.getPassword())) {
     			//パスワードが空でも更新ができるようにする
 
+    		}
+    	}catch(Exception e){
+    		return getUpdate(code, employee, model);
+
     	}
+    	// 従業員の登録から流用
     	try {
             ErrorKinds result = employeeService.upDate(employee);
 

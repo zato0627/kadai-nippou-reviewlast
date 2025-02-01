@@ -66,7 +66,8 @@ public class EmployeeService {
 
     	LocalDateTime now = LocalDateTime.now();// 現在の日時を取得
     	employee.setUpdatedAt(now);				//　せってい
-    	employee.setCreatedAt(now);				//現在の日時を登録しているが、登録日を参照できるようにする
+    	LocalDateTime saveTime = employee.getCreatedAt();
+    	employee.setCreatedAt(saveTime);				//現在の日時を登録しているが、登録日を参照できるようにする
 
     	employeeRepository.save(employee);
 
