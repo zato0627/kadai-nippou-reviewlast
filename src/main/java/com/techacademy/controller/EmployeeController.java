@@ -103,10 +103,10 @@ public class EmployeeController {
 
     /** 更新画面を表示 */
     @GetMapping(value = "/{code}/update/")
-    public String getUpdate(@PathVariable("code") String code, Model model) {
+    public String getUpdate(@PathVariable("code") String code, Employee employee, Model model) {
 
-    	Employee employee = employeeService.findByCode(code);	//urlのcode(社員番号)から社員のデータを取得
-    	model.addAttribute("employee", employee);				//modelにデータを登録
+    	//urlのcode(社員番号)から社員のデータを取得
+    	model.addAttribute("employee", employeeService.findByCode(code));				//modelにデータを登録
 
     	return "employees/update";	//updateに画面遷移
 
@@ -116,8 +116,8 @@ public class EmployeeController {
     public String postUpdate(@Validated Employee employee, BindingResult res, @PathVariable("code") String code, Model model) {
     	// 入力チェック
     	if(res.hasErrors()) {
-    		model.addAttribute("employee", employee);
-			return getUpdate(code, model);
+
+			return getUpdate(code, employee, model);
     	}
 
     	// 従業員新規登録処理のものを再利用
@@ -128,16 +128,16 @@ public class EmployeeController {
 			if (ErrorMessage.contains(result)) {	//エラーメッセージにresultが含まれているか確認
 
 				model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));	//含まれていたらmodelにエラーメッセージの名前、値を追加
-				model.addAttribute("employee", employee);
-				return getUpdate(code, model);	//getUpdateに結果を返す
+
+				return getUpdate(code, employee, model);	//getUpdateに結果を返す
 			}
 
 		} catch (DataIntegrityViolationException e) {	//データベースの整合性制約に違反した場合にスローされる例外発生した場合、このブロックが実行
 
 			model.addAttribute(ErrorMessage.getErrorName(ErrorKinds.DUPLICATE_EXCEPTION_ERROR),
         	ErrorMessage.getErrorValue(ErrorKinds.DUPLICATE_EXCEPTION_ERROR));
-			model.addAttribute("employee", employee);
-			return getUpdate(code, model);
+
+			return getUpdate(code, employee, model);
 		}
         return "redirect:/employees";	//一覧画面にリダイレクト
 
