@@ -103,51 +103,39 @@ public class EmployeeController {
 
     /** 更新画面を表示 */
     @GetMapping(value = "/{code}/update/")
-    public String getUpdate(@PathVariable("code") String code, Employee employee, Model model) {
+    public String getUpdate(@PathVariable("code") String code, Model model) {
 
-    		model.addAttribute("employee", employeeService.findByCode(code));	//urlのcode(社員番号)から社員のデータを取得
+    	Employee employee = employeeService.findByCode(code);//urlのcode(社員番号)から社員のデータを取得
+    	model.addAttribute("employee", employee);
 
-    		System.out.println("Employee1: " + employee);    	// デバッグログ　後で消す
-    		System.out.println("Password1: " + employee.getPassword());
-
-    		return "employees/update";
+    	return "employees/update";
 
     }
     /** 更新処理　*/
     @PostMapping(value = "/{code}/update/")
     public String postUpdate(@Validated Employee employee, @PathVariable("code") String code, BindingResult res, Model model) {
-
-    	System.out.println("Employee2: " + employee);    	// デバッグログ　後で消す
-    	System.out.println("Password2: " + employee.getPassword());
-
+    	// 入力チェック
     	if(res.hasErrors()) {
-					return getUpdate(code, employee, model);
+					return getUpdate(code, model);
     			}
 
-    	if("".equals(employee.getPassword())){
-    			employee.setPassword(employeeService.findByCode(code).getPassword());
-    			// パスワードが更新されたことを確認するデバッグログ
-    	        System.out.println("Updated Password2: " + employee.getPassword());
-    	}
 
-    	// 従業員の登録から流用
     	try {
 
-            ErrorKinds result = employeeService.upDate(employee);	//employeeを更新し、resultに格納
+			ErrorKinds result = employeeService.upDate(employee);	//employeeを更新し、resultに格納
 
-            if (ErrorMessage.contains(result)) {	//エラーメッセージにresultが含まれているか確認
+			if (ErrorMessage.contains(result)) {	//エラーメッセージにresultが含まれているか確認
 
-                model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));	//含まれていたらmodelにエラーメッセージの名前、値を追加
-                return getUpdate(code, employee, model);	//getUpdateに結果を返す
-            }
+				model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));	//含まれていたらmodelにエラーメッセージの名前、値を追加
+				return getUpdate(code, model);	//getUpdateに結果を返す
+			}
 
-        } catch (DataIntegrityViolationException e) {	//データベースの整合性制約に違反した場合にスローされる例外発生した場合、このブロックが実行
+		} catch (DataIntegrityViolationException e) {	//データベースの整合性制約に違反した場合にスローされる例外発生した場合、このブロックが実行
 
-            model.addAttribute(ErrorMessage.getErrorName(ErrorKinds.DUPLICATE_EXCEPTION_ERROR),
-                    ErrorMessage.getErrorValue(ErrorKinds.DUPLICATE_EXCEPTION_ERROR));
-            return getUpdate(code, employee, model);
-        }
-
+			model.addAttribute(ErrorMessage.getErrorName(ErrorKinds.DUPLICATE_EXCEPTION_ERROR),
+        	ErrorMessage.getErrorValue(ErrorKinds.DUPLICATE_EXCEPTION_ERROR));
+			return getUpdate(code, model);
+		}
         return "redirect:/employees";
 
     }
