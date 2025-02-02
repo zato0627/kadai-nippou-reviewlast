@@ -104,18 +104,27 @@ public class EmployeeController {
     /** 更新画面を表示 */
     @GetMapping(value = "/{code}/update/")
     public String getUpdate(@PathVariable("code") String code, Employee employee, Model model) {
+    	if (code != null) {
 
-    	//urlのcode(社員番号)から社員のデータを取得
-    	model.addAttribute("employee", employeeService.findByCode(code));				//modelにデータを登録
+    		//urlのcode(社員番号)から社員のデータを取得
+    		model.addAttribute("employee", employeeService.getEmployee(code));				//modelにデータを登録
 
-    	return "employees/update";	//updateに画面遷移
+    		return "employees/update";	//updateに画面遷移
+
+    	}else {
+    		model.addAttribute("employee", employee);
+
+    		return "employees/update";
+    	}
+
 
     }
     /** 更新処理　*/
     @PostMapping(value = "/{code}/update/")
-    public String postUpdate(@Validated Employee employee, BindingResult res, @PathVariable("code") String code, Model model) {
+    public String postUpdate(@PathVariable("code") String code, @Validated Employee employee, BindingResult res, Model model) {
     	// 入力チェック
     	if(res.hasErrors()) {
+    		code = null;
 
 			return getUpdate(code, employee, model);
     	}

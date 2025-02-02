@@ -51,6 +51,11 @@ public class EmployeeService {
     }
 
     @Transactional
+    public Employee getEmployee(String code) {
+		return employeeRepository.findById(code).get();
+	}
+
+    @Transactional
     public ErrorKinds upDate(Employee employee) {
 
     	//更新画面のパスワード入力欄が空白じゃない時だけパスワードをチェックするように変更
