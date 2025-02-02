@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.techacademy.constants.ErrorKinds;
 import com.techacademy.entity.Employee;
+import com.techacademy.entity.Employee.Role;
 import com.techacademy.repository.EmployeeRepository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,15 +57,24 @@ public class EmployeeService {
 	}
 
     @Transactional
-    public ErrorKinds upDate(Employee employee) {
+    public ErrorKinds upDate(Employee employee, String code) {
 
-    	//更新画面のパスワード入力欄が空白じゃない時だけパスワードをチェックするように変更
-    	if(!"".equals(employee.getPassword())){
+    	//String name = employee.getName();
+    	//Role role = employee.getRole();
+
+    	//変更
+    	if(getEmployee(code).getPassword().equals(employee.getPassword())){
+
+    		employee.setPassword(getEmployee(code).getPassword());
+
+    	}else{
+
     		// パスワードチェック
     		ErrorKinds result = employeePasswordCheck(employee);
     		if(ErrorKinds.CHECK_OK != result) {
     			return result;
     		}
+
     	}
 
     	LocalDateTime now = LocalDateTime.now();// 現在の日時を取得

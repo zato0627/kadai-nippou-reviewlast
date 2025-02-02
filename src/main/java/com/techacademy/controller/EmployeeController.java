@@ -132,7 +132,7 @@ public class EmployeeController {
     	// 従業員新規登録処理のものを再利用
     	try {
 
-			ErrorKinds result = employeeService.upDate(employee);	//employeeを更新し、resultに格納
+			ErrorKinds result = employeeService.upDate(employee, code);	//employeeを更新し、resultに格納
 
 			if (ErrorMessage.contains(result)) {	//エラーメッセージにresultが含まれているか確認
 
