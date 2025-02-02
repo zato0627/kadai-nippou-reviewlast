@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import com.techacademy.constants.ErrorKinds;
 import com.techacademy.entity.Employee;
-import com.techacademy.entity.Employee.Role;
 import com.techacademy.repository.EmployeeRepository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -59,22 +58,19 @@ public class EmployeeService {
     @Transactional
     public ErrorKinds upDate(Employee employee, String code) {
 
-    	//String name = employee.getName();
-    	//Role role = employee.getRole();
-
     	//変更
-    	if(getEmployee(code).getPassword().equals(employee.getPassword())){
+    	if("".equals(employee.getPassword())){
 
-    		employee.setPassword(getEmployee(code).getPassword());
+    		String pass = findByCode(code).getPassword();
+    		employee.setPassword(pass);
 
-    	}else{
+    	}else {
 
     		// パスワードチェック
     		ErrorKinds result = employeePasswordCheck(employee);
     		if(ErrorKinds.CHECK_OK != result) {
     			return result;
     		}
-
     	}
 
     	LocalDateTime now = LocalDateTime.now();// 現在の日時を取得
