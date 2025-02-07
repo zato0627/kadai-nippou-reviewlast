@@ -1,43 +1,35 @@
 package com.techacademy.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.techacademy.constants.ErrorKinds;
-import com.techacademy.constants.ErrorMessage;
 import com.techacademy.entity.Employee;
-import com.techacademy.service.DailyReportService;
+import com.techacademy.service.ReportService;
 import com.techacademy.service.EmployeeService;
-import com.techacademy.service.UserDetail;
 
 @Controller
 @RequestMapping("dailyreports")
-public class DailyReportController {
+public class ReportController {
 	private final EmployeeService employeeService;
-	private final DailyReportService dailyReportService;
+	private final ReportService reportService;
 
     @Autowired
-    public DailyReportController(DailyReportService dailyReportService, EmployeeService employeeService) {
-        this.dailyReportService = dailyReportService;
+    public ReportController(ReportService reportService, EmployeeService employeeService) {
+        this.reportService = reportService;
         this.employeeService = employeeService;
     }
 
     // 日報一覧画面
     @GetMapping
-    public String reportList(Model model) {
+    public String reportList( Model model) {
 
-        model.addAttribute("listSize", employeeService.findAll().size());
-        model.addAttribute("employeeList", employeeService.findAll());
+        model.addAttribute("listSize", reportService.findAll().size());
+        model.addAttribute("reporList", reportService.findAll());
 
         return "dailyreports/reportlist";
     }

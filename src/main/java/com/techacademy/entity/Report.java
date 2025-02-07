@@ -1,74 +1,52 @@
 package com.techacademy.entity;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.SQLRestriction;
 import org.hibernate.validator.constraints.Length;
 
-import com.techacademy.entity.Employee.Role;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
-
-public class DailyReport {
 
 @Data
 @Entity
 @Table(name = "reports")
 @SQLRestriction("delete_flg = false")
-public class Employee {
+public class Report {
 
-	public static enum Role {
-        GENERAL("一般"), ADMIN("管理者");
-
-	private String name;
-
-	private Role(String name) {
-
-	this.name = name;
-
-	}
-
-        public String getValue() {
-        	return this.name;
-	    }
-    }
+	@ManyToOne
+	@JoinColumn(name = "employee_code", referencedColumnName = "code", nullable = false)
+	private Employee employee;
 
 	// ID
     @Id
-    @Column(length = 10)
-    @NotEmpty
-    @Length(max = 10)
-    private String code;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
-    // 名前
-    @Column(length = 20, nullable = false)
-    @NotEmpty
-    @Length(max = 20)
-    private String name;
+    //日付
+    @Column(nullable = false)
+    private LocalDate reportDate;
 
     //タイトル
     @Column(length = 100)
     @NotEmpty
     @Length(max = 100)
-    private String Title;
+    private String title;
 
     //内容
-    @Column(length = 600)
+    @Column(columnDefinition="LONGEXT")
     @NotEmpty
     @Length(max = 600)
-    private String Content;
-
-    // 権限
-    @Column(columnDefinition="VARCHAR(10)", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Role role;
+    private String content;
 
     // 削除フラグ(論理削除を行うため)
     @Column(columnDefinition="TINYINT", nullable = false)
@@ -82,5 +60,5 @@ public class Employee {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
-	}
+
 }
