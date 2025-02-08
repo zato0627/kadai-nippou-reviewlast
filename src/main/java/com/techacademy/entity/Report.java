@@ -43,7 +43,7 @@ public class Report {
     private String title;
 
     //内容
-    @Column(columnDefinition="LONGEXT")
+    @Column(columnDefinition="LONGTEXT")
     @NotEmpty
     @Length(max = 600)
     private String content;

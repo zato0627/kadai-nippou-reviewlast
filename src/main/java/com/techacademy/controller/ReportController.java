@@ -29,7 +29,7 @@ public class ReportController {
     public String reportList( Model model) {
 
         model.addAttribute("listSize", reportService.findAll().size());
-        model.addAttribute("reporList", reportService.findAll());
+        model.addAttribute("reportList", reportService.findAll());
 
         return "dailyreports/reportlist";
     }
