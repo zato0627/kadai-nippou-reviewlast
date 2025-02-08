@@ -1,10 +1,13 @@
 package com.techacademy.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.techacademy.constants.ErrorKinds;
 import com.techacademy.entity.Report;
 import com.techacademy.repository.ReportRepository;
 
@@ -29,6 +32,24 @@ public class ReportService {
 
 		Report report = option.orElse(null);
 		return report;
+	}
+
+	//日報保存
+	@Transactional
+	public ErrorKinds saveReport(Report report) {
+
+		//if(report.getReportDate() != ) {
+		//	return ErrorKinds.DATECHECK_ERROR;
+		//}
+
+		report.setDeleteFlg(false);
+
+		LocalDateTime now = LocalDateTime.now();
+		report.setCreatedAt(now);
+		report.setUpdatedAt(now);
+
+		reportRepository.save(report);
+		return ErrorKinds.SUCCESS;
 	}
 
 }

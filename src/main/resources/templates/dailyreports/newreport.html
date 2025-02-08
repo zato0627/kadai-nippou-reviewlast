@@ -22,21 +22,21 @@
 
                         <div class="card-body">
 
-                            <form th:action="@{/dailyreports/newreport}" th:object="${employee}" th:method="post">
+                            <form th:action="@{/dailyreports/newreport}" th:object="${report}" th:method="post">
                                 <div class="wizard wizard-success mb-4">
                                     <div class="mb-3">
                                         <label class="form-label" for="code">日付</label>
                                         <p class="mb-1"></p>
                                         <div class="col-md-7">
-											<!--<input class="form-control" type="date" th:field="*{reportDate}">-->
-
+											<input class="form-control" type="date" th:field="*{reportDate}"　th:errorclass="err" id="reportDate">
+											<span th:errors="*{reportDate}" class="text-denger"></span>
                                         </div>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label" for="name">氏名</label>
                                         <p class="mb-1"></p>
                                         <div class="col-md-7">
-                                            <p class="align-middle" th:text="${employee.name}"></p>
+										<p class="align-middel" th:text="${report.employee.name}"></p>
 
                                         </div>
                                     </div>
@@ -44,18 +44,20 @@
                                         <label class="form-label" for="password">タイトル</label>
                                         <p class="mb-1"></p>
                                         <div class="col-md-7">
-
+											<input class="form-control" type="text" th:field="*{title}"　th:errorclass="err" id="title">
+											<span th:errors="*{title}" class="text-denger"></span>
                                         </div>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label" for="role">内容</label>
                                         <p class="mb-1"></p>
                                         <div class="col-md-4">
-
+											<textarea class="form-control" th:field="*{content}"　th:errorclass="err" id="content"></textarea>
+											<span th:errors="*{content}" class="text-denger"></span>
                                         </div>
                                     </div>
                                 </div>
-                                <input type="hidden" th:field="*{createdAt}"><!-- 登録情報を非表示で取得　-->
+
                                 <p class="mt-5">
                                     <input type="submit" value="登録" class="btn btn-primary">
                                     <a th:href="@{/dailyreports}" class="btn btn-primary">戻る</a>
