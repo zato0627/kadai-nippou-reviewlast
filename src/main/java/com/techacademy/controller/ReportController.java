@@ -64,8 +64,8 @@ public class ReportController {
     @PostMapping(value = "/newreport")
     public String newReport(@Validated Report report, BindingResult res, @AuthenticationPrincipal UserDetail userDetail, Model model) {
 
-    	String code = userDetail.getUsername();
-    	
+    	String name = userDetail.getEmployee().getName();
+    	report.getEmployee().setName(name);
 
     	if(res.hasErrors()) {
     		return createReport(report);
