@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.techacademy.constants.ErrorKinds;
 import com.techacademy.entity.Employee;
+import com.techacademy.entity.Report;
 import com.techacademy.repository.EmployeeRepository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,7 +55,6 @@ public class EmployeeService {
     public Employee getEmployee(String code) {
 		return employeeRepository.findById(code).get();
 	}
-
     @Transactional
     public ErrorKinds upDate(Employee employee, String code) {
 
@@ -95,6 +95,9 @@ public class EmployeeService {
         LocalDateTime now = LocalDateTime.now();
         employee.setUpdatedAt(now);
         employee.setDeleteFlg(true);
+
+        //削除対象に紐づいている、日報リストを取得
+        //List<Report> reportList = ReportService.findByCode(employee);
 
         return ErrorKinds.SUCCESS;
     }

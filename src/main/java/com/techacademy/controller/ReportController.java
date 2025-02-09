@@ -55,20 +55,23 @@ public class ReportController {
 
     //日報　新規登録
     @GetMapping(value = "/newreport")
-    public String createReport(@ModelAttribute Report report) {
+    public String createReport(@ModelAttribute Report report, @AuthenticationPrincipal UserDetail userDetail, Model model) {
+
+    	String code = userDetail.getEmployee().getCode();
+    	String name = userDetail.getEmployee().getName();
+    	model.addAttribute("code", code);
+    	model.addAttribute("name", name);
+
+    	System.out.println("名前" + model);
 
     	return "dailyreports/newreport";
     }
-
     //日報　新規登録処理
     @PostMapping(value = "/newreport")
     public String newReport(@Validated Report report, BindingResult res, @AuthenticationPrincipal UserDetail userDetail, Model model) {
 
-    	String name = userDetail.getEmployee().getName();
-    	report.getEmployee().setName(name);
-
     	if(res.hasErrors()) {
-    		return createReport(report);
+    		return createReport(report, userDetail, model);
     	}
 
     	try {
@@ -76,12 +79,12 @@ public class ReportController {
 
     		if(ErrorMessage.contains(result)) {
     			model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
-    			return createReport(report);
+    			return createReport(report, userDetail, model);
     		}
     	}catch(DataIntegrityViolationException e) {
     		model.addAttribute(ErrorMessage.getErrorName(ErrorKinds.DUPLICATE_EXCEPTION_ERROR),
     					ErrorMessage.getErrorValue(ErrorKinds.DUPLICATE_EXCEPTION_ERROR));
-    		return createReport(report);
+    		return createReport(report, userDetail, model);
     	}
 
     	return "redirect:/dairyreports";
@@ -89,11 +92,51 @@ public class ReportController {
 
     //　日報更新
     @GetMapping(value = "/{code}/reportupdate/")
-    public String reportUpdate(@PathVariable("code") String code, Employee employee, Model model) {
+    public String getUpdate(@PathVariable("code") String code, Report report, Model model) {
+    	if(code != null) {
+    		model.addAttribute("report", reportService.getReport(code));
+    		return "dailyreports/reportupdate";
+    	}else {
+    		model.addAttribute("report", report);
+    		return "dailyreports/reportupdate";
+    	}
+    }
+    @PostMapping(value = "/{code}/reportupdate/")
+    public String postUpdate(@PathVariable("code") String code, @Validated Report report, BindingResult res, Model model) {
+    	//
+    	if(res.hasErrors()) {
+    		code = null;
+    		return getUpdate(code, report, model);
+    	}
 
-    	model.addAttribute("employee", employeeService.getEmployee(code));
+    	try {
+			ErrorKinds result = reportService.repUpdate(report, code);	//更新し、resultに格納
 
-    	return "dailyreports/reportupdate";
+			if (ErrorMessage.contains(result)) {	//エラーメッセージにresultが含まれているか確認
+
+				model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));	//含まれていたらmodelにエラーメッセージの名前、値を追加
+
+				return getUpdate(code, report, model);	//結果を返す
+			}
+
+		} catch (DataIntegrityViolationException e) {	//データベースの整合性制約に違反した場合にスローされる例外発生した場合、このブロックが実行
+
+			model.addAttribute(ErrorMessage.getErrorName(ErrorKinds.DUPLICATE_EXCEPTION_ERROR),
+        	ErrorMessage.getErrorValue(ErrorKinds.DUPLICATE_EXCEPTION_ERROR));
+
+			return getUpdate(code, report, model);
+		}
+    	System.out.println(report);
+    	return "redirect:/dailyreports";
+    }
+
+    //日報削除処理
+    @PostMapping(value = "/{code}/delete")
+    public String delet(@PathVariable("code") String code) {
+
+    	reportService.delete(code);
+
+    	return "redirect:/dailyreports";
     }
 
 }

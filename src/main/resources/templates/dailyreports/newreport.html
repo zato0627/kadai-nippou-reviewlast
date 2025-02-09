@@ -25,10 +25,10 @@
                             <form th:action="@{/dailyreports/newreport}" th:object="${report}" th:method="post">
                                 <div class="wizard wizard-success mb-4">
                                     <div class="mb-3">
-                                        <label class="form-label" for="code">日付</label>
+                                        <label class="form-label" for="date">日付</label>
                                         <p class="mb-1"></p>
                                         <div class="col-md-7">
-											<input class="form-control" type="date" th:field="*{reportDate}"　th:errorclass="err" id="reportDate">
+											<input class="form-control" type="date" th:field="*{reportDate}"　th:errorclass="err" id="date">
 											<span th:errors="*{reportDate}" class="text-denger"></span>
                                         </div>
                                     </div>
@@ -36,8 +36,9 @@
                                         <label class="form-label" for="name">氏名</label>
                                         <p class="mb-1"></p>
                                         <div class="col-md-7">
-										<p class="align-middel" th:text="${report.employee.name}"></p>
-
+										<p class="align-middle" th:text="${name}"></p>
+									<!--	<p class="align-middle" th:text="${report.employee != null} ? ${employee.name} : '名前が設定されていません'"></p>
+											-->
                                         </div>
                                     </div>
                                     <div class="mb-3">
@@ -57,6 +58,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                <p class="align-middle" th:text="${code}"></p>
 
                                 <p class="mt-5">
                                     <input type="submit" value="登録" class="btn btn-primary">
