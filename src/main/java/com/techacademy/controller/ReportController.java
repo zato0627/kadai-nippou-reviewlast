@@ -56,22 +56,22 @@ public class ReportController {
     //日報　新規登録
     @GetMapping(value = "/newreport")
     public String createReport(@ModelAttribute Report report, @AuthenticationPrincipal UserDetail userDetail, Model model) {
-
     	String code = userDetail.getEmployee().getCode();
     	String name = userDetail.getEmployee().getName();
     	model.addAttribute("code", code);
     	model.addAttribute("name", name);
-
-    	System.out.println("名前" + model);
 
     	return "dailyreports/newreport";
     }
     //日報　新規登録処理
     @PostMapping(value = "/newreport")
     public String newReport(@Validated Report report, BindingResult res, @AuthenticationPrincipal UserDetail userDetail, Model model) {
+    	Employee employee = new Employee();
+    	employee = userDetail.getEmployee();
 
+    	model.addAttribute(employee);
     	if(res.hasErrors()) {
-    		return createReport(report, userDetail, model);
+    			return createReport(report, userDetail, model);
     	}
 
     	try {
@@ -86,6 +86,9 @@ public class ReportController {
     					ErrorMessage.getErrorValue(ErrorKinds.DUPLICATE_EXCEPTION_ERROR));
     		return createReport(report, userDetail, model);
     	}
+
+
+    	System.out.println("名前" + report);
 
     	return "redirect:/dairyreports";
     }
