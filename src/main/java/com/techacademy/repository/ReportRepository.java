@@ -9,7 +9,7 @@ import com.techacademy.entity.Report;
 
 public interface ReportRepository extends JpaRepository<Report, String>{
 
-	List<Report> findByEmployee_Role(Role role);
-	List<Report> findByEmployee_Name(String code);
+	List<Report> findByEmployee_Role(String code);
+	List<Report> findById(Integer id);
 
 }

@@ -53,14 +53,15 @@
 										<td class="align-middle" th:text="${#temporals.format(report.updatedAt, 'yyyy-MM-dd hh:mm:ss')}"></td>
                                     </tr>
                                 </table>
+
                                 <div class="mt-5 row g-1">
                                 	<div class="col-auto">
-                                        <form name="form" th:action="@{/dailyreports/{code}/reportupdate/(code=${report.employee.code})}" th:method="get">
+                                        <form name="form" th:action="@{/dailyreports/{id}/reportupdate/(id=${report.id})}" th:method="get">
                                             <input type="submit" value="更新" class="btn btn-primary">
                                         </form>
                                     </div>
                                     <div class="col-auto">
-                                        <form name="form" th:action="@{/dailyreports/{code}/delete(code=${report.employee.code})}" th:method="post">
+                                        <form name="form" th:action="@{/dailyreports/{id}/delete(code=${report.id})}" th:method="post">
                                             <input type="submit" value="削除" class="btn btn-primary">
                                         </form>
                                     </div>

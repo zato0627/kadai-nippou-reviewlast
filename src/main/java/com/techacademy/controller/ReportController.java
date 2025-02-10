@@ -44,10 +44,10 @@ public class ReportController {
     }
 
     // 日報詳細画面
-    @GetMapping(value = "/{code}/")
-    public String reportDetail(@PathVariable("code") String code, Model model) {
+    @GetMapping(value = "/{id}/")
+    public String reportDetail(@PathVariable("id") Integer id, Model model) {
 
-    	model.addAttribute("report", reportService.findByCode(code));
+    	model.addAttribute("report", reportService.getId(id));
 
     	return "dailyreports/reportdetail";
 
@@ -56,9 +56,9 @@ public class ReportController {
     //日報　新規登録
     @GetMapping(value = "/newreport")
     public String createReport(@ModelAttribute Report report, @AuthenticationPrincipal UserDetail userDetail, Model model) {
-    	String code = userDetail.getEmployee().getCode();
+
     	String name = userDetail.getEmployee().getName();
-    	model.addAttribute("code", code);
+
     	model.addAttribute("name", name);
 
     	return "dailyreports/newreport";
@@ -68,8 +68,8 @@ public class ReportController {
     public String newReport(@Validated Report report, BindingResult res, @AuthenticationPrincipal UserDetail userDetail, Model model) {
     	Employee employee = new Employee();
     	employee = userDetail.getEmployee();
+    	report.setEmployee(employee);
 
-    	model.addAttribute(employee);
     	if(res.hasErrors()) {
     			return createReport(report, userDetail, model);
     	}
@@ -87,39 +87,36 @@ public class ReportController {
     		return createReport(report, userDetail, model);
     	}
 
-
-    	System.out.println("名前" + report);
-
-    	return "redirect:/dairyreports";
+    	return "redirect:/dailyreports";
     }
 
     //　日報更新
-    @GetMapping(value = "/{code}/reportupdate/")
-    public String getUpdate(@PathVariable("code") String code, Report report, Model model) {
-    	if(code != null) {
-    		model.addAttribute("report", reportService.getReport(code));
+    @GetMapping(value = "/{id}/reportupdate/")
+    public String getUpdate(@PathVariable("id") Integer id, Report report, Model model) {
+    	if(id != null) {
+    		model.addAttribute("report", reportService.getId(id));
     		return "dailyreports/reportupdate";
     	}else {
     		model.addAttribute("report", report);
     		return "dailyreports/reportupdate";
     	}
     }
-    @PostMapping(value = "/{code}/reportupdate/")
-    public String postUpdate(@PathVariable("code") String code, @Validated Report report, BindingResult res, Model model) {
-    	//
+    @PostMapping(value = "/{id}/reportupdate/")
+    public String postUpdate(@PathVariable("id") Integer id, @Validated Report report, BindingResult res, Model model) {
+
     	if(res.hasErrors()) {
-    		code = null;
-    		return getUpdate(code, report, model);
+    		id = null;
+    		return getUpdate(id, report, model);
     	}
 
     	try {
-			ErrorKinds result = reportService.repUpdate(report, code);	//更新し、resultに格納
+			ErrorKinds result = reportService.repUpdate(report, id);	//更新し、resultに格納
 
 			if (ErrorMessage.contains(result)) {	//エラーメッセージにresultが含まれているか確認
 
 				model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));	//含まれていたらmodelにエラーメッセージの名前、値を追加
 
-				return getUpdate(code, report, model);	//結果を返す
+				return getUpdate(id, report, model);	//結果を返す
 			}
 
 		} catch (DataIntegrityViolationException e) {	//データベースの整合性制約に違反した場合にスローされる例外発生した場合、このブロックが実行
@@ -127,17 +124,16 @@ public class ReportController {
 			model.addAttribute(ErrorMessage.getErrorName(ErrorKinds.DUPLICATE_EXCEPTION_ERROR),
         	ErrorMessage.getErrorValue(ErrorKinds.DUPLICATE_EXCEPTION_ERROR));
 
-			return getUpdate(code, report, model);
+			return getUpdate(id, report, model);
 		}
-    	System.out.println(report);
     	return "redirect:/dailyreports";
     }
 
     //日報削除処理
-    @PostMapping(value = "/{code}/delete")
-    public String delet(@PathVariable("code") String code) {
+    @PostMapping(value = "/{id}/delete")
+    public String delet(@PathVariable("id") Integer id) {
 
-    	reportService.delete(code);
+    	reportService.delete(id);
 
     	return "redirect:/dailyreports";
     }

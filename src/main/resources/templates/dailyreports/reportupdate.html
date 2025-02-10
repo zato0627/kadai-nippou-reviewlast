@@ -22,7 +22,7 @@
 
                         <div class="card-body">
 
-                            <form th:action="@{/dailyreports/{code}/reportupdate/(code=${report.employee.code})}" th:object="${report}" th:method="post">
+                            <form th:action="@{/dailyreports/{id}/reportupdate/(id=${report.id})}" th:object="${report}" th:method="post">
                                 <div class="wizard wizard-success mb-4">
                                     <div class="mb-3">
                                         <label class="form-label" for="date">日付</label>
@@ -59,7 +59,7 @@
                                     </div>
                                 </div>
                                 <!-- 登録情報を非表示で取得　-->
-                                <input type="hidden" th:field="*{id}">
+
                                 <input type="hidden" th:field="*{createdAt}">
                                 <input type="hidden" th:field="*{employee.code}">
                                 <p class="mt-5">

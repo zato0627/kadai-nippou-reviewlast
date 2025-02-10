@@ -27,6 +27,13 @@ public class ReportService {
 		return reportRepository.findAll();
 	}
 
+	//idで検索
+	@Transactional
+	public Report getId(Integer id) {
+
+		return reportRepository.findById(id).get(0);
+	}
+
 	//1件を検索
 	public Report findByCode(String code) {
 
@@ -53,12 +60,12 @@ public class ReportService {
 	}
 
 	// 日報更新　コードから日報を1件取得
-	@Transactional
+	/*@Transactional
 	public Report getReport(String code) {
 		return reportRepository.findById(code).get();
-	}
+	}*/
 	@Transactional
-	public ErrorKinds repUpdate(Report report, String code) {
+	public ErrorKinds repUpdate(Report report, Integer id) {
 
 		LocalDateTime now = LocalDateTime.now();
 		report.setUpdatedAt(now);
@@ -72,9 +79,9 @@ public class ReportService {
 
 	//　日報削除
 	@Transactional
-	public ErrorKinds delete(String code) {
+	public ErrorKinds delete(Integer id) {
 
-		Report report = findByCode(code);
+		Report report = getId(id);
 		LocalDateTime now = LocalDateTime.now();
 		report.setUpdatedAt(now);
 		report.setDeleteFlg(true);
