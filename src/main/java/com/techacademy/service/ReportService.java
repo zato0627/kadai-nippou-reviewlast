@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.techacademy.constants.ErrorKinds;
+import com.techacademy.entity.Employee;
 import com.techacademy.entity.Report;
 import com.techacademy.repository.ReportRepository;
 
@@ -47,10 +48,12 @@ public class ReportService {
 	@Transactional
 	public ErrorKinds saveReport(Report report) {
 
+		//日付の重複チェック
+		if(findByReportDate(report.getReportDate()) != null) {
+			return ErrorKinds.DATECHECK_ERROR;
+		}
 		report.setDeleteFlg(false);
 
-		LocalDate savedate = report.getReportDate();
-		report.setReportDate(savedate);
 		LocalDateTime now = LocalDateTime.now();
 		report.setCreatedAt(now);
 		report.setUpdatedAt(now);
@@ -58,12 +61,7 @@ public class ReportService {
 		reportRepository.save(report);
 		return ErrorKinds.SUCCESS;
 	}
-
-	// 日報更新　コードから日報を1件取得
-	/*@Transactional
-	public Report getReport(String code) {
-		return reportRepository.findById(code).get();
-	}*/
+	// 日報更新
 	@Transactional
 	public ErrorKinds repUpdate(Report report, Integer id) {
 
@@ -88,5 +86,18 @@ public class ReportService {
 
 		return ErrorKinds.SUCCESS;
 	}
+
+	public Report findByReportDate(LocalDate reportDate) {
+
+		Optional<Report> option = reportRepository.findByReportDate(reportDate);
+
+		Report report = option.orElse(null);
+		return report;
+	}
+
+	public List<Report> findByEmployee(Employee employee) {
+	    return reportRepository.findByEmployee(employee);
+	}
+
 
 }

@@ -70,6 +70,7 @@ public class ReportController {
     	employee = userDetail.getEmployee();
     	report.setEmployee(employee);
 
+    	//入力チェック
     	if(res.hasErrors()) {
     			return createReport(report, userDetail, model);
     	}
@@ -82,8 +83,8 @@ public class ReportController {
     			return createReport(report, userDetail, model);
     		}
     	}catch(DataIntegrityViolationException e) {
-    		model.addAttribute(ErrorMessage.getErrorName(ErrorKinds.DUPLICATE_EXCEPTION_ERROR),
-    					ErrorMessage.getErrorValue(ErrorKinds.DUPLICATE_EXCEPTION_ERROR));
+    		model.addAttribute(ErrorMessage.getErrorName(ErrorKinds.DATECHECK_ERROR),
+    					ErrorMessage.getErrorValue(ErrorKinds.DATECHECK_ERROR));
     		return createReport(report, userDetail, model);
     	}
 

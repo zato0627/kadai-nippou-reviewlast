@@ -13,6 +13,8 @@ import com.techacademy.constants.ErrorKinds;
 import com.techacademy.entity.Employee;
 import com.techacademy.entity.Report;
 import com.techacademy.repository.EmployeeRepository;
+import com.techacademy.repository.ReportRepository;
+
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -20,10 +22,12 @@ public class EmployeeService {
 
     private final EmployeeRepository employeeRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ReportService reportService;
 
-    public EmployeeService(EmployeeRepository employeeRepository, PasswordEncoder passwordEncoder) {
+    public EmployeeService(EmployeeRepository employeeRepository, PasswordEncoder passwordEncoder, ReportService reportService) {
         this.employeeRepository = employeeRepository;
         this.passwordEncoder = passwordEncoder;
+        this.reportService = reportService;
     }
 
     // 従業員保存
@@ -50,7 +54,7 @@ public class EmployeeService {
         employeeRepository.save(employee);
         return ErrorKinds.SUCCESS;
     }
-
+    //更新
     @Transactional
     public Employee getEmployee(String code) {
 		return employeeRepository.findById(code).get();
@@ -97,7 +101,12 @@ public class EmployeeService {
         employee.setDeleteFlg(true);
 
         //削除対象に紐づいている、日報リストを取得
-        //List<Report> reportList = ReportService.findByCode(employee);
+        List<Report> reportList = reportService.findByEmployee(employee);
+
+        for(Report report : reportList) {
+
+        	reportService.delete(report.getId());
+        }
 
         return ErrorKinds.SUCCESS;
     }
