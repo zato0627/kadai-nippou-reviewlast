@@ -65,6 +65,15 @@ public class ReportService {
 	@Transactional
 	public ErrorKinds repUpdate(Report report, Integer id) {
 
+		/*if("".equals(report.getReportDate())) {
+			LocalDate date = getId(id).getReportDate();
+			report.setReportDate(date);
+		}else {
+
+			return ErrorKinds.DATECHECK_ERROR;
+
+		}*/
+
 		LocalDateTime now = LocalDateTime.now();
 		report.setUpdatedAt(now);
 		LocalDateTime saveTime = report.getCreatedAt();
@@ -88,7 +97,6 @@ public class ReportService {
 	}
 
 	public Report findByReportDate(LocalDate reportDate) {
-
 		Optional<Report> option = reportRepository.findByReportDate(reportDate);
 
 		Report report = option.orElse(null);

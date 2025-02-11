@@ -25,7 +25,7 @@
                                 <table class="table table-striped">
                                     <tr>
                                         <th class="w-25">日付</th>
-										<td class="align-middle" th:text="日付"></td>
+
 										<td class="align-middle" th:text="${#temporals.format(report.reportDate, 'yyyy-MM-dd')}"></td>
                                     </tr>
                                     <tr>
@@ -34,22 +34,22 @@
                                     </tr>
 									<tr>
                                         <th>タイトル</th>
-                                        <td class="align-middle" th:text="タイトル"></td>
+
 										<td class="align-middele" th:text="${report.title}"></td>
                                     </tr>
                                     <tr>
                                         <th>内容</th>
-                                        <td class="align-middle" th:text="内容"></td>
+
 										<td calss="align-middle" th:text="${report.content}"></td>
                                     </tr>
                                     <tr>
                                         <th>登録日時</th>
-                                        <td class="align-middle" th:text="登録日時"></td>
+
 										<td class="align-middle" th:text="${#temporals.format(report.createdAt, 'yyyy-MM-dd hh:mm:ss')}"></td>
                                     </tr>
                                     <tr>
                                         <th>更新日時</th>
-                                        <td class="align-middle" th:text="更新日時"></td>
+
 										<td class="align-middle" th:text="${#temporals.format(report.updatedAt, 'yyyy-MM-dd hh:mm:ss')}"></td>
                                     </tr>
                                 </table>
