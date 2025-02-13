@@ -49,7 +49,9 @@ public class ReportService {
 	public ErrorKinds saveReport(Report report) {
 
 		//日付の重複チェック
-		if(findByReportDate(report.getReportDate()) != null) {
+		//Listないに同じ日付のデータがあるか判定
+		if(!findByReportDate(report.getReportDate(), report.getEmployee().getName()).isEmpty()) {
+
 			return ErrorKinds.DATECHECK_ERROR;
 		}
 		report.setDeleteFlg(false);
@@ -65,14 +67,11 @@ public class ReportService {
 	@Transactional
 	public ErrorKinds repUpdate(Report report, Integer id) {
 
-		/*if("".equals(report.getReportDate())) {
-			LocalDate date = getId(id).getReportDate();
-			report.setReportDate(date);
-		}else {
+		if(!findByReportDate(report.getReportDate(),report.getEmployee().getName()).isEmpty()) {
 
 			return ErrorKinds.DATECHECK_ERROR;
+		}
 
-		}*/
 
 		LocalDateTime now = LocalDateTime.now();
 		report.setUpdatedAt(now);
@@ -96,11 +95,9 @@ public class ReportService {
 		return ErrorKinds.SUCCESS;
 	}
 
-	public Report findByReportDate(LocalDate reportDate) {
-		Optional<Report> option = reportRepository.findByReportDate(reportDate);
+	public List<Report> findByReportDate(LocalDate reportDate, String name) {
 
-		Report report = option.orElse(null);
-		return report;
+		return reportRepository.findByReportDateAndEmployee_Name(reportDate, name);
 	}
 
 	public List<Report> findByEmployee(Employee employee) {
