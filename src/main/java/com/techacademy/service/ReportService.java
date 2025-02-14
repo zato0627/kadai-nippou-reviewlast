@@ -36,11 +36,11 @@ public class ReportService {
 	}
 
 	//1件を検索
-	public Report findByCode(String code) {
+	public Report findByEmployee_Code(String code){
 
-		Optional<Report> option = reportRepository.findById(code);
-
+		Optional<Report> option = reportRepository.findByEmployee_Code(code);
 		Report report = option.orElse(null);
+
 		return report;
 	}
 
@@ -49,7 +49,7 @@ public class ReportService {
 	public ErrorKinds saveReport(Report report) {
 
 		//日付の重複チェック
-		//Listないに同じ日付のデータがあるか判定
+		//Listないに同じ日付のデータがあるか判定(日付と名前を使ってる)
 		if(!findByReportDate(report.getReportDate(), report.getEmployee().getName()).isEmpty()) {
 
 			return ErrorKinds.DATECHECK_ERROR;

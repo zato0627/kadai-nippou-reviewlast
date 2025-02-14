@@ -1,6 +1,6 @@
 package com.techacademy.controller;
 
-import javax.management.relation.Role;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.techacademy.constants.ErrorKinds;
 import com.techacademy.constants.ErrorMessage;
 import com.techacademy.entity.Employee;
+import com.techacademy.entity.Employee.Role;
 import com.techacademy.entity.Report;
 import com.techacademy.service.ReportService;
 import com.techacademy.service.UserDetail;
@@ -37,12 +38,15 @@ public class ReportController {
 
     // 日報一覧画面
     @GetMapping
-    public String reportList(@AuthenticationPrincipal UserDetail userDetail, Employee employee, Model model) {
+    public String reportList(@AuthenticationPrincipal UserDetail userDetail, Model model) {
 
-    	if("GENERAL".equals(userDetail.getEmployee().getRole())){
-    		model.addAttribute("listSize", reportService.findByEmployee(employee));
-    		model.addAttribute("reportList", reportService.findByEmployee(employee));
-    	}else if("ADMIN".equals(userDetail.getEmployee().getRole())) {
+    	if(Role.GENERAL.equals(userDetail.getEmployee().getRole())){
+    		String code = userDetail.getEmployee().getCode();
+    		model.addAttribute("listSize", reportService.findByEmployee_Code(code));
+    		model.addAttribute("reportList", reportService.findByEmployee_Code(code));
+    		System.out.println(userDetail.getEmployee().getCode());
+
+    	}else if(Role.ADMIN.equals(userDetail.getEmployee().getRole())) {
     		model.addAttribute("listSize", reportService.findAll().size());
     		model.addAttribute("reportList", reportService.findAll());
     	}
