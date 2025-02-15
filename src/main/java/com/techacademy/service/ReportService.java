@@ -56,8 +56,10 @@ public class ReportService {
 	@Transactional
 	public ErrorKinds repUpdate(Report report, Integer id) {
 
-		if(!findByRepDate(report.getReportDate()).isEmpty()) {
+		if(!findByRepDate(report.getReportDate()).isEmpty() && !report.getId().equals(getId(id).getId())) {
+
 			return ErrorKinds.DATECHECK_ERROR;
+
 		}
 
 
