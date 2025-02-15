@@ -3,8 +3,6 @@ package com.techacademy.service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,21 +33,12 @@ public class ReportService {
 		return reportRepository.findById(id).get(0);
 	}
 
-	//1件を検索
-	public Report findByEmployee_Code(String code){
-
-		Optional<Report> option = reportRepository.findByEmployee_Code(code);
-		Report report = option.orElse(null);
-
-		return report;
-	}
-
 	//日報保存
 	@Transactional
 	public ErrorKinds saveReport(Report report) {
 
 		//日付の重複チェック
-		//Listないに同じ日付のデータがあるか判定(日付と名前を使ってる)
+		//Listないに同じ日付のデータがあるか判定(日付と名前を使ってる) .isEmpty()でListが空か調べる
 		if(!findByReportDate(report.getReportDate(), report.getEmployee().getName()).isEmpty()) {
 
 			return ErrorKinds.DATECHECK_ERROR;
@@ -67,8 +56,7 @@ public class ReportService {
 	@Transactional
 	public ErrorKinds repUpdate(Report report, Integer id) {
 
-		if(!findByReportDate(report.getReportDate(),report.getEmployee().getName()).isEmpty()) {
-
+		if(!findByRepDate(report.getReportDate()).isEmpty()) {
 			return ErrorKinds.DATECHECK_ERROR;
 		}
 
@@ -94,10 +82,16 @@ public class ReportService {
 
 		return ErrorKinds.SUCCESS;
 	}
-
+	//日付と名前で検索
 	public List<Report> findByReportDate(LocalDate reportDate, String name) {
 
 		return reportRepository.findByReportDateAndEmployee_Name(reportDate, name);
+	}
+
+	//日付で検索
+	public List<Report> findByRepDate(LocalDate reportDate) {
+
+		return reportRepository.findByReportDate(reportDate);
 	}
 
 	public List<Report> findByEmployee(Employee employee) {

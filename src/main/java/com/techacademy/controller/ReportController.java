@@ -2,6 +2,8 @@ package com.techacademy.controller;
 
 
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -27,31 +29,29 @@ import com.techacademy.service.EmployeeService;
 @Controller
 @RequestMapping("dailyreports")
 public class ReportController {
-	private final EmployeeService employeeService;
 	private final ReportService reportService;
 
     @Autowired
     public ReportController(ReportService reportService, EmployeeService employeeService) {
         this.reportService = reportService;
-        this.employeeService = employeeService;
     }
 
     // 日報一覧画面
     @GetMapping
     public String reportList(@AuthenticationPrincipal UserDetail userDetail, Model model) {
+    	//findByEmployeeで従業員のデータを取得しListに追加
+    	List<Report> reports = reportService.findByEmployee(userDetail.getEmployee());
 
-    	if(Role.GENERAL.equals(userDetail.getEmployee().getRole())){
-    		String code = userDetail.getEmployee().getCode();
-    		model.addAttribute("listSize", reportService.findByEmployee_Code(code));
-    		model.addAttribute("reportList", reportService.findByEmployee_Code(code));
-    		System.out.println(userDetail.getEmployee().getCode());
+    	if(Role.GENERAL.equals(userDetail.getEmployee().getRole())){	//userDetailから従業員の権限を取得しGENERAL（一般）の場合の処理
 
-    	}else if(Role.ADMIN.equals(userDetail.getEmployee().getRole())) {
+    		model.addAttribute("listSize", reports.size());		//上記で作成したListから.sizeで要素数を取得
+    		model.addAttribute("reportList", reportService.findByEmployee(userDetail.getEmployee()));	//findByEmployeeで従業員のデータを取得
+
+
+    	}else if(Role.ADMIN.equals(userDetail.getEmployee().getRole())) {	//userDetailから従業員の権限を取得しADMIN（管理者）の場合の処理
     		model.addAttribute("listSize", reportService.findAll().size());
     		model.addAttribute("reportList", reportService.findAll());
     	}
-
-
 
         return "dailyreports/reportlist";
     }
