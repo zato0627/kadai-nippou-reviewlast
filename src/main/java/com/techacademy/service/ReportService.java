@@ -58,23 +58,14 @@ public class ReportService {
 
 		if(!report.getReportDate().equals(getId(id).getReportDate())) {
 
-			System.out.println("入力された日付とDBの日付は一致していない");//日付の変更の有無が確認できているか表示
-
 			if(!findByReportDate(report.getReportDate(), getId(id).getEmployee().getName()).isEmpty()) {
 
-				System.out.println("重複あり");	//重複確認ができているか表示
-				System.out.println(getId(id).getEmployee().getName());//名前が取得できているか表示
+				System.out.println("report.getReportDate：" + report.getReportDate());
+				System.out.println("getId(id).getReportDate()：" + getId(id).getReportDate());
 
 				return ErrorKinds.DATECHECK_ERROR;
 			}
-				System.out.println("重複無し");
-
-		}else {
-
-			System.out.println("入力された日付とDBの日付は一致している");
-
 		}
-
 
 		LocalDateTime now = LocalDateTime.now();
 		report.setUpdatedAt(now);

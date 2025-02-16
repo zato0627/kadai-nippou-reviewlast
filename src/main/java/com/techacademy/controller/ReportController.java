@@ -2,6 +2,7 @@ package com.techacademy.controller;
 
 
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -125,11 +126,10 @@ public class ReportController {
 
     	try {
 			ErrorKinds result = reportService.repUpdate(report, id);	//更新し、resultに格納
-
+System.out.println("コントローラークラス：" + report);
 			if (ErrorMessage.contains(result)) {	//エラーメッセージにresultが含まれているか確認
 
 				model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));	//含まれていたらmodelにエラーメッセージの名前、値を追加
-
 				return getUpdate(id, report, model);	//結果を返す
 			}
 
