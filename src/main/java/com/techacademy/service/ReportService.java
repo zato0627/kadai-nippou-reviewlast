@@ -30,7 +30,7 @@ public class ReportService {
 	@Transactional
 	public Report getId(Integer id) {
 
-		return reportRepository.findById(id).get(0);
+		return reportRepository.findById(id).get();
 	}
 
 	//日報保存
@@ -91,7 +91,7 @@ public class ReportService {
 	//日付と名前で検索
 	public List<Report> findByReportDate(LocalDate reportDate, String name) {
 
-		return reportRepository.findByReportDateAndEmployee_Name(reportDate, name);
+		return reportRepository.findByReportDateAndEmployeeName(reportDate, name);
 	}
 
 	//日付で検索
