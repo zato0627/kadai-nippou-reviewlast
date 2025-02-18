@@ -78,7 +78,7 @@ public class ReportController {
     }
     //日報　新規登録処理
     @PostMapping(value = "/add")
-    public String postNewReport(@Validated Report report, BindingResult res, @AuthenticationPrincipal UserDetail userDetail, Model model) {
+    public String newReport(@Validated Report report, BindingResult res, @AuthenticationPrincipal UserDetail userDetail, Model model) {
     	Employee employee = new Employee();
     	employee = userDetail.getEmployee();
     	report.setEmployee(employee);
@@ -144,7 +144,7 @@ public class ReportController {
 
     //日報削除処理
     @PostMapping(value = "/{id}/delete")
-    public String postDelet(@PathVariable("id") Integer id) {
+    public String delete(@PathVariable("id") Integer id) {
 
     	reportService.delete(id);
 
