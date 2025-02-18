@@ -27,7 +27,7 @@ import com.techacademy.service.UserDetail;
 import com.techacademy.service.EmployeeService;
 
 @Controller
-@RequestMapping("dailyreports")
+@RequestMapping("reports")
 public class ReportController {
 	private final ReportService reportService;
 
@@ -58,7 +58,7 @@ public class ReportController {
 
     // 日報詳細画面
     @GetMapping(value = "/{id}/")
-    public String reportDetail(@PathVariable("id") Integer id, Model model) {
+    public String getDetail(@PathVariable("id") Integer id, Model model) {
 
     	model.addAttribute("report", reportService.getId(id));
 
@@ -67,8 +67,8 @@ public class ReportController {
     }
 
     //日報　新規登録
-    @GetMapping(value = "/newreport")
-    public String createReport(@ModelAttribute Report report, @AuthenticationPrincipal UserDetail userDetail, Model model) {
+    @GetMapping(value = "/add")
+    public String getCreate(@ModelAttribute Report report, @AuthenticationPrincipal UserDetail userDetail, Model model) {
 
     	String name = userDetail.getEmployee().getName();
 
@@ -77,15 +77,15 @@ public class ReportController {
     	return "dailyreports/newreport";
     }
     //日報　新規登録処理
-    @PostMapping(value = "/newreport")
-    public String newReport(@Validated Report report, BindingResult res, @AuthenticationPrincipal UserDetail userDetail, Model model) {
+    @PostMapping(value = "/add")
+    public String postNewReport(@Validated Report report, BindingResult res, @AuthenticationPrincipal UserDetail userDetail, Model model) {
     	Employee employee = new Employee();
     	employee = userDetail.getEmployee();
     	report.setEmployee(employee);
 
     	//入力チェック
     	if(res.hasErrors()) {
-    			return createReport(report, userDetail, model);
+    			return getCreate(report, userDetail, model);
     	}
 
     	try {
@@ -93,19 +93,19 @@ public class ReportController {
 
     		if(ErrorMessage.contains(result)) {
     			model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
-    			return createReport(report, userDetail, model);
+    			return getCreate(report, userDetail, model);
     		}
     	}catch(DataIntegrityViolationException e) {
     		model.addAttribute(ErrorMessage.getErrorName(ErrorKinds.DATECHECK_ERROR),
     					ErrorMessage.getErrorValue(ErrorKinds.DATECHECK_ERROR));
-    		return createReport(report, userDetail, model);
+    		return getCreate(report, userDetail, model);
     	}
 
-    	return "redirect:/dailyreports";
+    	return "redirect:/reports";
     }
 
     //　日報更新
-    @GetMapping(value = "/{id}/reportupdate/")
+    @GetMapping(value = "/{id}/update/")
     public String getUpdate(@PathVariable("id") Integer id, Report report, Model model) {
     	if(id != null) {
     		model.addAttribute("report", reportService.getId(id));
@@ -115,7 +115,7 @@ public class ReportController {
     		return "dailyreports/reportupdate";
     	}
     }
-    @PostMapping(value = "/{id}/reportupdate/")
+    @PostMapping(value = "/{id}/update/")
     public String postUpdate(@PathVariable("id") Integer id, @Validated Report report, BindingResult res, Model model) {
 
     	if(res.hasErrors()) {
@@ -125,7 +125,7 @@ public class ReportController {
 
     	try {
 			ErrorKinds result = reportService.repUpdate(report, id);	//更新し、resultに格納
-System.out.println("コントローラークラス：" + report);
+
 			if (ErrorMessage.contains(result)) {	//エラーメッセージにresultが含まれているか確認
 
 				model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));	//含まれていたらmodelにエラーメッセージの名前、値を追加
@@ -139,16 +139,16 @@ System.out.println("コントローラークラス：" + report);
 
 			return getUpdate(id, report, model);
 		}
-    	return "redirect:/dailyreports";
+    	return "redirect:/reports";
     }
 
     //日報削除処理
     @PostMapping(value = "/{id}/delete")
-    public String delet(@PathVariable("id") Integer id) {
+    public String postDelet(@PathVariable("id") Integer id) {
 
     	reportService.delete(id);
 
-    	return "redirect:/dailyreports";
+    	return "redirect:/reports";
     }
 
 }
